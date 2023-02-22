@@ -1,19 +1,21 @@
 package com.codinginflow.sqliterecyclerview;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 	private SQLiteDatabase mDatabase;
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
 		buttonIncrease.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				closeKeyboard();
 				increase();
 			}
 		});
@@ -65,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 		buttonDecrease.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				closeKeyboard();
 				decrease();
 			}
 		});
@@ -72,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
 		buttonAdd.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				closeKeyboard();
 				addItem();
 			}
 		});
@@ -125,5 +130,14 @@ public class MainActivity extends AppCompatActivity {
 				GroceryContract.GroceryEntry._ID + "=" + id,
 				null);
 		mAdapter.swapCursor(getAllItems());
+	}
+
+	private void closeKeyboard() {
+		View view = mEditTextName.getRootView();	//Force to get focus of Edit Text...
+		// this.getCurrentFocus();
+		if (view != null) {
+			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow( view.getWindowToken(), 0);
+		}
 	}
 }
