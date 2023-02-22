@@ -47,9 +47,11 @@ class GroceryAdapter extends RecyclerView.Adapter<GroceryAdapter.GroceryViewHold
 
       String name = mCursor.getString(mCursor.getColumnIndex(GroceryContract.GroceryEntry.COLUMN_NAME));
       int amount = mCursor.getInt(mCursor.getColumnIndex(GroceryContract.GroceryEntry.COLUMN_AMOUNT));
+      long id = mCursor.getLong(mCursor.getColumnIndex(GroceryContract.GroceryEntry._ID));
 
       holder.nameText.setText(name);
       holder.countText.setText(String.valueOf(amount));
+      holder.itemView.setTag(id);
    }
 
    @Override

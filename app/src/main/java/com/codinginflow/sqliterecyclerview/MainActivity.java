@@ -1,6 +1,8 @@
 package com.codinginflow.sqliterecyclerview;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,6 +34,19 @@ public class MainActivity extends AppCompatActivity {
 		recyclerView.setLayoutManager(new LinearLayoutManager(this));
 		mAdapter = new GroceryAdapter(this, getAllItems());
 		recyclerView.setAdapter(mAdapter);
+
+		new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+				ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+			@Override
+			public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+				return false;
+			}
+
+			@Override
+			public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+				removeItem((long) viewHolder.itemView.getTag());
+			}
+		}).attachToRecyclerView(recyclerView);
 
 		mEditTextName = findViewById(R.id.edit_text_name);
 		mTextViewAmount = findViewById(R.id.textview_amount);
@@ -103,5 +118,12 @@ public class MainActivity extends AppCompatActivity {
 				null,
 				GroceryContract.GroceryEntry.COLUMN_TIMESTAMP + " DESC"
 		);
+	}
+
+	private void removeItem(long id) {
+		mDatabase.delete(GroceryContract.GroceryEntry.TABLE_NAME,
+				GroceryContract.GroceryEntry._ID + "=" + id,
+				null);
+		mAdapter.swapCursor(getAllItems());
 	}
 }
